@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Solicitação de Ajuste de Cartão Ponto</title>
+</head>
+<body>
+    <h1>Solicitação de Ajuste de Cartão Ponto</h1>
+    <form id="solicitacaoForm" enctype="multipart/form-data">
+        <label for="nome">Nome:</label><br>
+        <input type="text" id="nome" name="nome" required><br><br>
+
+        <label for="cadastro">Cadastro:</label><br>
+        <input type="text" id="cadastro" name="cadastro" required><br><br>
+
+        <label for="horario">Horário de Ajuste:</label><br>
+        <input type="text" id="horario" name="horario" required><br><br>
+
+        <label for="justificativa">Justificativa:</label><br>
+        <textarea id="justificativa" name="justificativa" required></textarea><br><br>
+
+        <label for="arquivo">Carregar arquivo (PNG ou PDF):</label><br>
+        <input type="file" id="arquivo" name="arquivo" accept=".png,.pdf" required><br><br>
+
+        <button type="button" onclick="exibirArquivo()">Exibir Arquivo Online</button><br><br>
+
+        <button type="button" onclick="enviarEmail()">Enviar Solicitação</button>
+    </form>
+
+    <script>
+        function exibirArquivo() {
+            const arquivoInput = document.getElementById('arquivo');
+            const arquivo = arquivoInput.files[0];
+            if (arquivo) {
+                const url = URL.createObjectURL(arquivo);
+                window.open(url, '_blank');
+            } else {
+                alert('Por favor, selecione um arquivo.');
+            }
+        }
+
+        function enviarEmail() {
+            const form = document.getElementById('solicitacaoForm');
+            const formData = new FormData(form);
+            const xhr = new XMLHttpRequest();
+            xhr.open('POST', 'enviar_email.php'); // Arquivo PHP para enviar o e-mail
+            xhr.onload = function () {
+                if (xhr.status === 200) {
+                    alert('E-mail enviado com sucesso!');
+                    // Limpar formulário após envio
+                    form.reset();
+                } else {
+                    alert('Erro ao enviar o e-mail. Por favor, tente novamente mais tarde.');
+                }
+            };
+            xhr.send(formData);
+        }
+    </script>
+</body>
+</html>
